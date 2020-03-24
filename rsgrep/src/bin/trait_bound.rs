@@ -1,8 +1,8 @@
 /**
- * トレイトはポリモーフィズムを実現する手段の一つ
- * haskellの型クラスに近い
- * ダックタイピングがしやすい
- */
+ * トレイト境界
+ * 「あるトレイトを実装する型」をジェネリクスで受け取ることもできる。これをトレイト境界という。
+ * 型の集合を定義するもの
+**/
 
 trait DuckLike {
     // トレイトを実装する型が実装するべきメソッドを定義
@@ -50,12 +50,17 @@ impl DuckLike for i64 {
     }
 }
 
+// ジェネリクスの型パラメータに`型パラメータ名：　トレイト名`で境界をつけることができる
+fn duck_go<D: DuckLike>(duck: D) {
+    // 境界をつけることで関数本体でトレイトのメソッドが使える
+    duck.quack();
+    duck.walk();
+}
+
 fn main() {
     let duck = Duck;
-    let tsuchinoko = Tsuchinoko;
-    let i = 3;
-    duck.quack(); // => quack
-    tsuchinoko.quack(); // => mew
-    i.quack(); // quack; quack; quack
-    tsuchinoko.walk();
+    let f = 0.0;
+    duck_go(duck);
+    // duck_go(f);
 }
+
