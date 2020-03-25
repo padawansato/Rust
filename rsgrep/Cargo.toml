@@ -10,3 +10,7 @@ regex = "1"
 [[bin]]
 name = "main"
 path = "src/main.rs"
+
+[[bin]]
+name = "cat"
+path = "src/bin/cat.rs"
