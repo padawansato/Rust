@@ -73,9 +73,7 @@ fn main() {
         if reg.is_match(&line) {
             // パターンにマッチしたらプリントする
             // is_matchはリードオンリーなので参照型を受け取る
-            if reg.is_match(&line) {
-                println!("{}", line);
-            }
+            println!("{}", line);
         }
     }
 }
