@@ -43,6 +43,7 @@ fn main() {
                                       // lines()で一行ずつ取り出すイテレータを作成
     for line in input.lines() {
         //unwrapすると出力を簡易に安全に出力できるようだ。でもよくわからない。
+        //追記 この場合はただ、Ok()をunwrapして中身を取り出しているだけ。
         println!("{}", line.unwrap());
         // println!("{:?}", line);
     }
