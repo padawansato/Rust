@@ -1,16 +1,17 @@
+use std::env;
+use std::fs::File;
+use std::io::BufRead;
+use std::io::BufReader;
 /**
  * 自作catコマンド
  * rsgrepを参考に作成する。
  * rsgrepはfileを開き、バッファに入れ、それをパターンマッチした結果を返していた。
  * そのため、パターンマッチをせず、そのまま標準出力する。
 */
-use std::env;
-use std::fs::File;
-use std::io::BufReader;
 
 // 使い方
 fn usage() {
-    println!("cat FILENAME");
+    println!("usage : cat FILENAME");
 }
 
 fn main() {
@@ -25,7 +26,7 @@ fn main() {
     };
 
     // File構造体のopen関連関数でファイルを開ける
-    let file = match File::open(filename) {
+    let file = match File::open(&filename) {
         Ok(file) => file,
         Err(e) => {
             println!(
@@ -37,7 +38,12 @@ fn main() {
     };
 
     // Fileを開いたまま使うと遅く、扱いづらいため、バッファにいれる
-    let input = BufReader::new(file);
-    // inputを標準出力する
-    println!("{:?}", input);
+    let input = BufReader::new(file); // reader
+                                      // inputを標準出力する
+                                      // lines()で一行ずつ取り出すイテレータを作成
+    for line in input.lines() {
+        //unwrapすると出力を簡易に安全に出力できるようだ。でもよくわからない。
+        println!("{}", line.unwrap());
+        // println!("{:?}", line);
+    }
 }
