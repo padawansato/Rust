@@ -6,11 +6,34 @@ use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+// std以外のクレートを使う際
+extern crate regex;
+// regexからRegex型をインポート
+use regex::Regex;
+
 fn usage() {
     println!("rsgrep PATTERN FILENAME");
 }
 
 fn main() {
+    // 引数からパターンを取り出す
+    let pattern = match env::args().nth(1) {
+        //これで引数一番目を取る
+        Some(pattern) => pattern,
+        None => {
+            usage();
+            return;
+        }
+    };
+    // 取り出したパターンからRegexを改めて作る
+    // 無効な正規表現だった場合などにはエラーが返る
+    let reg = match Regex::new(&pattern) {
+        Ok(reg) => reg,
+        Err(e) => {
+            println!("Invalid regexp {}: {}", pattern, e);
+            return;
+        }
+    };
     // envモジュールのargs関数で、引数を取得
     // そのうち2番目を`nth`で取得(0番目はプログラムの名前)
     // 引数があるかわからないので、Opthionで返される。<= 使い時
@@ -47,6 +70,12 @@ fn main() {
                 return;
             }
         };
-        println!("{}", line);
+        if reg.is_match(&line) {
+            // パターンにマッチしたらプリントする
+            // is_matchはリードオンリーなので参照型を受け取る
+            if reg.is_match(&line) {
+                println!("{}", line);
+            }
+        }
     }
 }
