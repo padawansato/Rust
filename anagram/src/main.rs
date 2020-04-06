@@ -13,13 +13,13 @@ fn sorted_string(s: &str) -> String {
 }
 
 // ②
-struct Anagram(HashMap<String, Vec<String>>);
+struct Anagram(HashMap<String, Vec<String>>); //Stringを目印にはStringを格納した配列を格納した連想配列
 
 impl Anagram {
     // トレイト境界`AsRef<Path>`は、ざっくり意訳すると「パス名っぽいもの」を表す
     // `Self`は、`Anagram`へのエイリアス
     fn new<P: AsRef<Path>>(dictfile: P) -> Result<Self, io::Error> {
-        let file = File::open(dictfile)?; // ★
+        let file = File::open(dictfile)?; // ★計算に成功したらその値を取り出し、失敗したらResultのErrで関数から抜ける
         let file = io::BufReader::new(file);
         // ハッシュマップを準備しておく
         let mut anagram = Anagram(HashMap::new());
