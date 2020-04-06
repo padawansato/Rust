@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build single Rust file",
+            "type": "shell",
+            "command": "rustc",
+            "args": [
+                "-o",
+                "${workspaceRoot}/${fileBasenameNoExtension}",
+                "-C",
+                "debug_assertions=yes",
+                "-g",
+                "${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            }
+        }
+    ]
+}

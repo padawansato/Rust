@@ -5,3 +5,16 @@ authors = ["psato <forhighlow@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+
+[[bin]]
+name = "first"
+path = "src/first.rs"
+
+[[bin]]
+name = "second"
+path = "src/second.rs"
+
+[[bin]]
+name = "thrid"
+path = "src/thrid.rs"
+

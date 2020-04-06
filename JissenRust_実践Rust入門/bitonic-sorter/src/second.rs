@@ -2,7 +2,7 @@ use super::SortOrder;
 
 // 成功時はOK(())を、失敗時はErr(文字列)を返す
 pub fn sort<T: Ord>(x: &mut [T], order: &SortOrder) -> Result<(), String> {
-    if x.len().is_power_of_two() {//2のべき乗かどうかの判定をするis~関数
+    if x.len().is_power_of_two() {
         match *order {
             SortOrder::Ascending  => do_sort(x, true),
             SortOrder::Descending => do_sort(x, false),

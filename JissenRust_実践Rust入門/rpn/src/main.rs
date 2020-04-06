@@ -24,7 +24,7 @@ fn rpn(exp: &str) -> f64 {
     // 要素がなくなるまで繰り返す
     for token in exp.split_whitespace() {
         // tokenがf64の数値ならスタックに積む
-        if let Ok(num) = token.parse::<f64>(){ // if let Okでで条件分岐を書いている = で代入しているのではない。
+        if let Ok(num) = token.parse::<f64>(){ // if let Okでで条件分岐を書いている = で代入しているのではない。//ここにbreakpointを打つ
             stack.push(num);
         } else {
             // tokenが数値でないなら、演算子なのか調べる
@@ -36,8 +36,8 @@ fn rpn(exp: &str) -> f64 {
                 "-" => apply2(&mut stack, |x,y| x - y),// stackが束縛されたベクタへの参照をする
                 "*" => apply2(&mut stack, |x,y| x * y),
                 "/" => apply2(&mut stack, |x,y| x / y),
-                
-                // tokenが演算子出ないなら、エラーを起こして終了する
+
+                // tokenが演算子ではないなら、エラーを起こして終了する
                 _=> panic!("Unknown operator: {}", token),
             }
         }
@@ -54,12 +54,12 @@ where
 {
     // 変数ｙとｘをスタックの最後の2要素に束縛する
     if let(Some(y), Some(x)) = (stack.pop(), stack.pop()){
-        // クロージャfunで計算し、その結果に変数ｘｗお束縛する
+        // クロージャfunで計算し、その結果に変数ｘｗを束縛する
         let z = fun(x,y);
         // 変数zの値をスタックに積む
         stack.push(z);
     } else {
         // スタックから要素が取り出せなかったときにはエラーを起こして終了する
-        panic!("Stack unserflow");
+        panic!("Stack underflow");
     }
 }
