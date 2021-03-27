@@ -106,9 +106,10 @@ fn lex(input: &str)-> Result<Vec<Token>,LexError>{
     // 位置を管理する値
     let mut pos = 0;
     // サブレキサを呼び出した後posを更新するマクロ
+    // 関数からの戻り値を結果のトークンに加え、位置情報を更新する
     macro_rules! lex_a_token {
         ($lexer:expr) => {
-            let (tok, p) = $lexer?;
+            let (tok, p) = $lexer?;// 関数の戻り値を入れる
             tokens.push(tok);
             pos = p;
         };
@@ -118,9 +119,44 @@ fn lex(input: &str)-> Result<Vec<Token>,LexError>{
         match input[pos] {
             // 遷移図通りの実装
             b'0'...b'9' => lex_a_token!(lex_number(input, pos)),
-            
+            b'+' => lex_a_token!(lex_plus(input, pos)),
+            b'-' => lex_a_token!(lex_minus(input, pos)),
+            b'*' => lex_a_token!(lex_asterisk(input, pos)),
+            b'/' => lex_a_token!(lex_slash(input, pos)),
+            b'(' => lex_a_token!(lex_lparen(input, pos)),
+            b')' => lex_a_token!(lex_rparen(input, pos)),
+            // 空白
+            b' ' |b'\n'| b'\t' => {
+                let ((), p) = skip_spaces(input, pos)?;
+                pos = p;
+            }
         }
+        // それ以外が来たらエラー
+        b => return Err(LexError::invalid_char(b as char, Loc(pos, pos + 1))),
     }
+    Ok(tokens)
+}
+
+// lexから呼び出す関数を書く前に
+// ユーティリティ関数 consume_byteを定義する
+// 読み取り位置のバイトが期待するものであれば１byte消費して読み取り位置を１すすめる。
+// 期待するものでなければエラーを返す
+
+// posのバイトが期待するものであれば1バイト消費してposを１すすめる。
+fn consume_byte(input: &[u8], pos: usize, b:u8)-> Result<(u8, usize), LexError> {
+    // posが入力サイズ以上ならば入力が終わっている
+    // 1バイト消費しているのに終わっている場合エラー
+    if input.len() <= pos {
+        return Err(LexError::eof(Loc(pos, pos)));
+    }
+    // 入力が期待するものでなければエラー
+    if input[pos] != b{
+        return Err(LexError::invalid_char(
+            input[pos] as char,
+            Loc(pos, pos +1 )
+        ));
+    }
+    Ok((b, pos + 1))
 }
 
 
