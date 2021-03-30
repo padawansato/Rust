@@ -159,6 +159,36 @@ fn consume_byte(input: &[u8], pos: usize, b:u8)-> Result<(u8, usize), LexError> 
     Ok((b, pos + 1))
 }
 
+// １文字を解析する関数
+fn lex_plus(input: &[u8], start:usize)-> Result<(Token, usize), LexError> {
+    // Result::mapを使うことで結果が正常だった場合の処理を簡潔にかける
+    // これはこのコードと等価
+    // ```
+    // match consume_byte(input, start, b'+'){
+    // OK((_, end )) => (Token::plus(Loc(start, end)), end),
+    // }
+    // Err(err) => Err(err),}
+    consume_byte(input, start, b'+').map(|(_,end)|(Token::plus(Loc(start, end)), end))
+}
+fn lex_minus(input: &[u8], start:usize)-> Result<(Token, usize), LexError> {
+    consume_byte(input, start, b'+').map(|(_,end)|(Token::minus(Loc(start, end)), end))
+}
+fn lex_asterisk(input: &[u8], start: usize) -> Result<(Token, usize), LexError> {
+consume_byte(input, start, b'*').map(|(_, end)| (Token::asterisk(Loc(start, end)), end))
+}
+fn lex_slash(input: &[u8], start: usize) -> Result<(Token, usize), LexError> {
+consume_byte(input, start, b'/').map(|(_, end)| (Token::slash(Loc(start, end)), end))
+}
+fn lex_lparen(input: &[u8], start: usize) -> Result<(Token, usize), LexError> {
+consume_byte(input, start, b'(').map(|(_, end)| (Token::lparen(Loc(start, end)), end))
+}
+fn lex_rparen(input: &[u8], start: usize) -> Result<(Token, usize), LexError> {
+    consume_byte(input, start, b')').map(|(_, end)| (Token::rparen(Loc(start, end)), end))
+}
+
+// mapで関数を受け取って、エラー時の処理を分岐して書いている。
+
+
 
 fn main() {
     println!("Hello, world!");
